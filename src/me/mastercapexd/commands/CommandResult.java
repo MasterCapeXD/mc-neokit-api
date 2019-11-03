@@ -2,23 +2,25 @@ package me.mastercapexd.commands;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public final class CommandResult {
+import me.mastercapexd.commons.Identifiable;
+
+public final class CommandResult implements Identifiable<String> {
 
 	public static final CommandResult
-	SUCCESS = new CommandResult(0),
-	CONSOLE_ONLY = new CommandResult(1),
-	PLAYER_ONLY = new CommandResult(2),
-	NO_PERMISSION = new CommandResult(3),
-	SYNTAX_ERROR = new CommandResult(4);
+	SUCCESS = new CommandResult("SUCCESS"),
+	CONSOLE_ONLY = new CommandResult("CONSOLE_ONLY"),
+	PLAYER_ONLY = new CommandResult("PLAYER_ONLY"),
+	NO_PERMISSION = new CommandResult("NO_PERMISSION");
 	
-	private final int code;
+	private final String id;
 	
-	public CommandResult(int code) {
-		this.code = code;
+	public CommandResult(String id) {
+		this.id = id;
 	}
 	
-	public int getResultCode() {
-		return code;
+	@Override
+	public String getIdentifier() {
+		return id;
 	}
 	
 	@Override
@@ -30,11 +32,11 @@ public final class CommandResult {
 			return false;
 		
 		CommandResult result = (CommandResult) obj;
-		return result.code == this.code;
+		return result.id.equals(this.id);
 	}
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(code).build();
+		return new HashCodeBuilder().append(id).build();
 	}
 }
