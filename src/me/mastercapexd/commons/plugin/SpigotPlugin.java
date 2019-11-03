@@ -9,17 +9,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.collect.Lists;
 
-import me.mastercapexd.commons.Events;
 import me.mastercapexd.commons.Ticks;
-import me.mastercapexd.commons.events.PlayerInventoryClickEvent;
 import me.mastercapexd.commons.terminable.TerminableRegistry;
 
 public class SpigotPlugin extends JavaPlugin implements ExtendedPlugin {
@@ -43,12 +39,6 @@ public class SpigotPlugin extends JavaPlugin implements ExtendedPlugin {
 		getServer().getScheduler().runTaskTimerAsynchronously(this, this.terminableRegistry::cleanup,
 				Ticks.from(10, TimeUnit.SECONDS),
 				Ticks.from(30, TimeUnit.SECONDS));
-		
-		Events.subscribe(InventoryClickEvent.class, EventPriority.LOWEST)
-		.filter(event -> event.getClickedInventory() != null)
-		.filter(event -> event.getClickedInventory().equals(event.getView().getBottomInventory()))
-		.handle(event -> getServer().getPluginManager().callEvent(new PlayerInventoryClickEvent(event)))
-		.register(this);
 		
 		onPluginEnable();
 	}
