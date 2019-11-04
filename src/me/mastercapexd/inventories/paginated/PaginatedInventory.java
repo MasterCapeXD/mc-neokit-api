@@ -39,7 +39,7 @@ public interface PaginatedInventory extends PersonalViewInventory {
 	int getPages(@Nonnull Player player);
 	
 	default Icon getIconAt(@Nonnull Player player, int page, int slot) {
-		return getIcon(player, getRows() * 8 * (page - 1) + slot);
+		return getIcon(player, getAbsoluteSlot(page, slot));
 	}
 	
 	default List<Icon> getContents(@Nonnull Player player) {
@@ -64,5 +64,9 @@ public interface PaginatedInventory extends PersonalViewInventory {
 	
 	default void removeContents(@Nonnull Icon... icons) {
 		removeContents(Lists.newArrayList(icons));
+	}
+	
+	default int getAbsoluteSlot(int page, int rawSlot) {
+		return getRows() * 8 * (page - 1) + rawSlot;
 	}
 }

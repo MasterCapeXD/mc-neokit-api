@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -80,20 +79,20 @@ public abstract class AbstractInventory implements InventoryBase {
 				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), event.getRawSlot(), event.getAction());
 				
 				Icon icon = null;
+				int absoluteSlot = event.getRawSlot();
 				if (view.getOwner() instanceof PaginatedInventory) {
 					PaginatedInventory inventory = ((PaginatedInventory) view.getOwner());
-					icon = inventory.getIconAt(player, inventory.getCurrentPage((Player) event.getWhoClicked()), event.getRawSlot());
+					absoluteSlot = inventory.getAbsoluteSlot(inventory.getCurrentPage((Player) event.getWhoClicked()), event.getRawSlot());
+					icon = inventory.getIcon(player, absoluteSlot);
+					if (icon.isTakeable() && event.getCursor() != null)
+						inventory.setIcon(player, absoluteSlot, Icon.of(event.getCursor(), clickData -> {}, true));
 				} else if (view.getOwner() instanceof PersonalViewInventory)
 					icon = ((PersonalViewInventory) view.getOwner()).getIcon(player, event.getRawSlot());
 				else if (view.getOwner() instanceof GlobalViewInventory)
 					icon = ((GlobalViewInventory) view.getOwner()).getIcon(event.getRawSlot());
 				
 				icon.getClickAction().accept(data);
-				
-				if (event.getCursor() != null && event.getCursor().getType() != Material.AIR)
-					event.setCancelled(icon != Icon.EMPTY && !icon.isTakeable());
-				else
-					event.setCancelled(!icon.isTakeable());
+				event.setCancelled(!icon.isTakeable());
 			})
 			.register(getPlugin());
 	

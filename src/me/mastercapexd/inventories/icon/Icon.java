@@ -11,6 +11,7 @@ import me.mastercapexd.inventories.ClickData;
 
 public interface Icon {
 
+	static final Icon EMPTY_REPLACEABLE = of(new ItemStack(Material.AIR), data -> {}, true);
 	static final Icon EMPTY = of(new ItemStack(Material.AIR));
 	
 	@Nonnull
