@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-public final class Cylinder {
+public class Cylinder {
 
 	private final Circle circle;
 	private final double yMin, yMax;

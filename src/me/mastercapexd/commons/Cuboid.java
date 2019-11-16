@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-public final class Cuboid {
+public class Cuboid {
 
 	private final Point min, max, maxXMinYMinZ, maxXMinYMaxZ, minXMinYMaxZ, minXMaxYMaxZ, minXMaxYMinZ, maxXMaxYMinZ;
 	

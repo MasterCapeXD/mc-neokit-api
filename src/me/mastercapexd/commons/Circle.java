@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-public final class Circle {
+public class Circle {
 
 	private final Tile center;
 	private final double radius;

@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-public final class Plot {
+public class Plot {
 
 	private final Tile min, max, minXMaxZ, maxXMinZ;
 	
