@@ -2,6 +2,8 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Circle {
 
 	private final Tile center;
@@ -53,5 +55,22 @@ public class Circle {
 	@Override
 	public String toString() {
 		return "Circle: {center: " + center.toString() + "} {radius: " + radius + "}";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
+		if (obj == null || (obj instanceof Circle))
+			return false;
+		
+		Circle circle = (Circle) obj;
+		return this.center.equals(circle.center) && this.radius == circle.radius;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(center).append(radius).build();
 	}
 }

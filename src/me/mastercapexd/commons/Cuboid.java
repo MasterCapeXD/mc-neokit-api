@@ -2,6 +2,8 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.google.common.base.Preconditions;
 
 public class Cuboid {
@@ -136,5 +138,23 @@ public class Cuboid {
 	@Override
 	public String toString() {
 		return "Cuboid: {min: " + min.toString() + "} {max: " + max.toString() + "}";
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
+		if (obj == null || (obj instanceof Cuboid))
+			return false;
+		
+		Cuboid cuboid = (Cuboid) obj;
+		return this.min.equals(cuboid.min) && this.max.equals(cuboid.max);
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(min).append(max).build();
 	}
 }

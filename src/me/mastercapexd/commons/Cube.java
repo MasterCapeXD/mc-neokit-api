@@ -2,6 +2,8 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Cube {
 
 	private final Cuboid cuboid;
@@ -116,5 +118,22 @@ public class Cube {
 	@Override
 	public String toString() {
 		return "Cube: {center: " + center.toString() + "} {length: " + length + "}";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
+		if (obj == null || (obj instanceof Cube))
+			return false;
+		
+		Cube cube = (Cube) obj;
+		return this.center.equals(cube.center) && this.length == cube.length;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(center).append(length).append(cuboid).build();
 	}
 }

@@ -2,6 +2,8 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.google.common.base.Preconditions;
 
 public class Plot {
@@ -109,5 +111,22 @@ public class Plot {
 	@Override
 	public String toString() {
 		return "Plot: {min: " + min.toString() + "} {max: " + max.toString() + "}";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
+		if (obj == null || (obj instanceof Plot))
+			return false;
+		
+		Plot plot = (Plot) obj;
+		return this.min.equals(plot.min) && this.max.equals(plot.max);
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(min).append(max).build();
 	}
 }
