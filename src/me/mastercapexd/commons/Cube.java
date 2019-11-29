@@ -82,6 +82,10 @@ public class Cube {
 		return cuboid.intersects(other);
 	}
 	
+	public boolean intersects(Cube other) {
+		return cuboid.intersects(other.toCuboid());
+	}
+	
 	public boolean intersects(Cuboid other) {
 		return cuboid.intersects(other);
 	}
@@ -110,8 +114,14 @@ public class Cube {
 		return cuboid.getDepth();
 	}
 	
+	@Nonnull
 	public Plot toPlot() {
 		return cuboid.toPlot();
+	}
+	
+	@Nonnull
+	public Cuboid toCuboid() {
+		return cuboid;
 	}
 	
 	@Nonnull
