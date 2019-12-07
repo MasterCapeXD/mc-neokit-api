@@ -71,7 +71,11 @@ public class SimplePersonalViewInventory extends AbstractInventory implements Pe
 	
 	@Override
 	public void close(@Nonnull Player player) {
+		if (!isViewing(player))
+			return;
+		
 		viewers.remove(player);
+		player.closeInventory();
 	}
 	
 	@Override

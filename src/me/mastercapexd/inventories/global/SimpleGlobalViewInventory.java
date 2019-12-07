@@ -46,7 +46,11 @@ public class SimpleGlobalViewInventory extends AbstractInventory implements Glob
 	}
 	
 	@Override
-	public void close(@Nonnull Player player) {}
+	public void close(@Nonnull Player player) {
+		if (!isViewing(player))
+			return;
+		player.closeInventory();
+	}
 	
 	@Override
 	public void refresh(Player player) {
