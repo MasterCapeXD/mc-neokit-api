@@ -92,7 +92,7 @@ public final class Tile {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Tile))
+		if (obj == null || !(obj instanceof Tile))
 			return false;
 		
 		Tile point = (Tile) obj;

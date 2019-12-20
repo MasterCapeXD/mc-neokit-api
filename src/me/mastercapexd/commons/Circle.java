@@ -62,7 +62,7 @@ public class Circle {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Circle))
+		if (obj == null || !(obj instanceof Circle))
 			return false;
 		
 		Circle circle = (Circle) obj;

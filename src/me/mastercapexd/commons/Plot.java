@@ -118,7 +118,7 @@ public class Plot {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Plot))
+		if (obj == null || !(obj instanceof Plot))
 			return false;
 		
 		Plot plot = (Plot) obj;

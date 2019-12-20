@@ -67,6 +67,18 @@ public class Cylinder {
 		return new Circle(circle.getCenter(), circle.getRadius());
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
+		if (obj == null || !(obj instanceof Cylinder))
+			return false;
+		
+		Cylinder cylinder = (Cylinder) obj;
+		return this.circle.equals(cylinder.circle) && this.yMin == cylinder.yMin && this.yMax == cylinder.yMax;
+	}
+	
 	@Nonnull
 	@Override
 	public String toString() {

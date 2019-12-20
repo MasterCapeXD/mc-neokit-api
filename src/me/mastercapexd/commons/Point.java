@@ -123,7 +123,7 @@ public final class Point {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Point))
+		if (obj == null || !(obj instanceof Point))
 			return false;
 		
 		Point point = (Point) obj;

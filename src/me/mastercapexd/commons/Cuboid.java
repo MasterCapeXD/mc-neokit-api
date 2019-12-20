@@ -146,7 +146,7 @@ public class Cuboid {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Cuboid))
+		if (obj == null || !(obj instanceof Cuboid))
 			return false;
 		
 		Cuboid cuboid = (Cuboid) obj;

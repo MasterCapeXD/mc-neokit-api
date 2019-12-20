@@ -95,7 +95,7 @@ public final class Direction {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Direction))
+		if (obj == null || !(obj instanceof Direction))
 			return false;
 		
 		Direction direction = (Direction) obj;

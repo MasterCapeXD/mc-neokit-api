@@ -130,7 +130,7 @@ public final class Position {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Position))
+		if (obj == null || !(obj instanceof Position))
 			return false;
 		
 		Position position = (Position) obj;

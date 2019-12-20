@@ -135,7 +135,7 @@ public class Cube {
 		if (obj == this)
 			return true;
 		
-		if (obj == null || (obj instanceof Cube))
+		if (obj == null || !(obj instanceof Cube))
 			return false;
 		
 		Cube cube = (Cube) obj;
