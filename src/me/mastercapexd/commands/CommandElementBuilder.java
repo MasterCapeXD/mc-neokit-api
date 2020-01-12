@@ -7,8 +7,9 @@ import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.Builder;
 import org.bukkit.command.CommandSender;
+
+import me.mastercapexd.commons.util.Builder;
 
 public interface CommandElementBuilder<T extends CommandElementBuilder<T, R>, R extends CommandElement> extends Builder<R> {
 

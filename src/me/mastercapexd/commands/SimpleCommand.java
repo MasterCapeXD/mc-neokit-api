@@ -10,7 +10,6 @@ import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -19,6 +18,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import me.mastercapexd.commons.plugin.PluginCommand;
+import me.mastercapexd.commons.util.ArrayUtils;
 
 public class SimpleCommand extends CommandBase implements Command {
 

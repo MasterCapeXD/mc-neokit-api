@@ -1,6 +1,6 @@
 package me.mastercapexd.commands;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import me.mastercapexd.commons.Identifiable;
 
@@ -37,6 +37,6 @@ public final class CommandResult implements Identifiable<String> {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(id).build();
+		return new HashCodeBuilder().append(id).toHashCode();
 	}
 }
