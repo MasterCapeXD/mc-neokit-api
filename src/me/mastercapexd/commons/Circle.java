@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Circle {
 
@@ -71,6 +71,6 @@ public class Circle {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(center).append(radius).build();
+		return new HashCodeBuilder().append(center).append(radius).toHashCode();
 	}
 }

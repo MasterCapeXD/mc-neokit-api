@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Cube {
 
@@ -144,6 +144,6 @@ public class Cube {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(center).append(length).append(cuboid).build();
+		return new HashCodeBuilder().append(center).append(length).append(cuboid).toHashCode();
 	}
 }

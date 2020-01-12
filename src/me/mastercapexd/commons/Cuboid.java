@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.google.common.base.Preconditions;
 
@@ -155,6 +155,6 @@ public class Cuboid {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(min).append(max).build();
+		return new HashCodeBuilder().append(min).append(max).toHashCode();
 	}
 }

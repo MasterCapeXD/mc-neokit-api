@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,6 +60,7 @@ public final class DatableMaterial {
 		return data;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public ItemStack toItemStack() {
 		return new ItemStack(material, 1, data);
 	}
@@ -82,6 +83,6 @@ public final class DatableMaterial {
 	}
 	
 	public int hashCode() {
-		return new HashCodeBuilder().append(material).append(data).build();
+		return new HashCodeBuilder().append(material).append(data).toHashCode();
 	}
 }

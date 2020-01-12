@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.Builder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -15,6 +14,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import me.mastercapexd.commons.DatableMaterial;
+import me.mastercapexd.commons.util.Builder;
+
 import com.google.common.collect.Lists;
 
 public final class ItemBuilder implements Builder<ItemStack> {

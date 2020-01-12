@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
 
 public final class Tile {
@@ -101,6 +101,6 @@ public final class Tile {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(world).append(x).append(z).build();
+		return new HashCodeBuilder().append(world).append(x).append(z).toHashCode();
 	}
 }

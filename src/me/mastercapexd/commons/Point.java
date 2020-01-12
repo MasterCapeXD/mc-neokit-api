@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -132,6 +132,6 @@ public final class Point {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(tile).append(y).build();
+		return new HashCodeBuilder().append(tile).append(y).toHashCode();
 	}
 }

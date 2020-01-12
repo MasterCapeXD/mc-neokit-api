@@ -2,7 +2,7 @@ package me.mastercapexd.commons;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
 
 public final class Position {
@@ -139,6 +139,6 @@ public final class Position {
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(point).append(direction).build();
+		return new HashCodeBuilder().append(point).append(direction).toHashCode();
 	}
 }
