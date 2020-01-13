@@ -49,7 +49,7 @@ public class SimpleCommand extends CommandBase implements Command {
 					.findFirst();
 			
 			if (argumentOptional.isPresent() && 
-					(params.length <= 1 || argumentOptional.get().getParent().getName().equalsIgnoreCase(params[localIndex - 1]) ||
+					(localIndex <= 1 || argumentOptional.get().getParent().getName().equalsIgnoreCase(params[localIndex - 1]) ||
 										ArrayUtils.contains(argumentOptional.get().getParent().aliases(), params[localIndex - 1]))) {
 				argument = argumentOptional.get();
 				break;
