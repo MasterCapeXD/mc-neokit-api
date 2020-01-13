@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.mastercapexd.commons.util.NumberValidator;
 
+@SuppressWarnings("deprecation")
 public final class DatableMaterial {
 
 	public static DatableMaterial fromString(@Nonnull String str) {
@@ -26,12 +27,10 @@ public final class DatableMaterial {
 		this.data = data;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public DatableMaterial(int id, short data) {
 		this(Material.getMaterial(id), data);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public DatableMaterial(String str) {
 		String[] idData = str.split(":");
 		Material material = Material.AIR;
@@ -60,7 +59,6 @@ public final class DatableMaterial {
 		return data;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ItemStack toItemStack() {
 		return new ItemStack(material, 1, data);
 	}

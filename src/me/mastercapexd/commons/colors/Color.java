@@ -2,12 +2,13 @@ package me.mastercapexd.commons.colors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.apache.commons.lang.enums.EnumUtils;
 
 public enum Color {
 
 	BLACK(ChatColor.BLACK, DyeColor.BLACK, 15),
 	DARK_GRAY(ChatColor.DARK_GRAY, DyeColor.GRAY, 7),
-	GRAY(ChatColor.GRAY, DyeColor.SILVER, 8),
+	GRAY(ChatColor.GRAY, DyeColor.valueOf(EnumUtils.getEnum(DyeColor.class, "SILVER") == null ? "LIGHT_GRAY" : "SILVER"), 8),
 	BLUE(ChatColor.BLUE, DyeColor.BLUE, 11),
 	TEAL(ChatColor.DARK_AQUA, DyeColor.CYAN, 9),
 	AQUA(ChatColor.AQUA, DyeColor.LIGHT_BLUE, 3),

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang.enums.EnumUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -18,6 +19,7 @@ import me.mastercapexd.commons.util.Builder;
 
 import com.google.common.collect.Lists;
 
+@SuppressWarnings("deprecation")
 public final class ItemBuilder implements Builder<ItemStack> {
 
 	public static String toStringFormat(@Nonnull ItemStack stack) {
@@ -234,7 +236,7 @@ public final class ItemBuilder implements Builder<ItemStack> {
 	}
 
 	public ItemBuilder setOwner(String ownerName) {
-		if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
+		if (item.getType() != Material.valueOf(EnumUtils.getEnum(Material.class, "SKULL_ITEM") == null ? "LEGACY_SKULL_ITEM" : "SKULL_ITEM") || item.getDurability() != 3)
 			return this;
 		
 		SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
