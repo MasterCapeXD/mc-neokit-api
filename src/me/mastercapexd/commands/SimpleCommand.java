@@ -39,6 +39,7 @@ public class SimpleCommand extends CommandBase implements Command {
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] params) {
 		ArgumentInfo argument = null;
+		int argIndex = 0;
 		
 		for (int paramIndex = params.length - 1; paramIndex >= 0; paramIndex--) {
 			final int localIndex = paramIndex;
@@ -52,6 +53,7 @@ public class SimpleCommand extends CommandBase implements Command {
 					(localIndex <= 1 || argumentOptional.get().getParent().getName().equalsIgnoreCase(params[localIndex - 1]) ||
 										ArrayUtils.contains(argumentOptional.get().getParent().aliases(), params[localIndex - 1]))) {
 				argument = argumentOptional.get();
+				argIndex = localIndex;
 				break;
 			}
 		}
@@ -71,7 +73,7 @@ public class SimpleCommand extends CommandBase implements Command {
 			return true;
 		}
 		
-		CommandResult result = argument.getExecutor().apply(sender, params);
+		CommandResult result = argument.getExecutor().apply(sender, ArrayUtils.subarray(params, argIndex + 1, params.length));
 		argument.getMessageOptional(result, sender).ifPresent(msg -> sender.sendMessage(msg));
 		return true;
 	}
