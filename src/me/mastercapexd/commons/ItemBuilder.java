@@ -1,12 +1,16 @@
 package me.mastercapexd.commons;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import org.apache.commons.lang.enums.EnumUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -15,70 +19,92 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import me.mastercapexd.commons.DatableMaterial;
+import me.mastercapexd.commons.colors.Colors;
 import me.mastercapexd.commons.util.Builder;
+import me.mastercapexd.commons.util.EnumUtils;
 
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("deprecation")
 public final class ItemBuilder implements Builder<ItemStack> {
 
-	public static String toStringFormat(@Nonnull ItemStack stack) {
-		Material material = stack.getType();
-		short durability = stack.getDurability();
-		int amount = stack.getAmount();
-		String dn = stack.getItemMeta().getDisplayName();
-		String lore = "null";
-		if (stack.getItemMeta().getLore() != null) {
-			lore = "";
-			for (String line : stack.getItemMeta().getLore())
-				lore = lore + line + "%nl%";
-			lore = lore.substring(0, lore.length() - 4);
-		}
+	public static List<String> toStringList(@Nonnull ItemStack itemStack) {
+		List<String> list = Lists.newArrayList();
+		ItemMeta meta = itemStack.getItemMeta();
 		
-		String enchantments = "null";
-		if (!stack.getEnchantments().isEmpty()) {
-			enchantments = "";
-			for (Enchantment ench : stack.getEnchantments().keySet())
-				enchantments = enchantments + ench.getName() + "%equals%" + stack.getEnchantments().get(ench) + "%nxt_ench%";
-			enchantments = enchantments.substring(0, enchantments.length() - 10);
+		list.add("name:" + itemStack.getType().name());
+		list.add("durability:" + itemStack.getDurability());
+		list.add("amount:" + itemStack.getAmount());
+		if (meta != null) {
+			if (meta.hasDisplayName())
+				list.add("display:" + meta.getDisplayName());
+			if (meta.hasLore())
+				list.add("lore:" + StringUtils.join(meta.getLore(), "%n"));
+			if (meta.hasEnchants()) {
+				Collection<String> enchantments = meta.getEnchants().entrySet().stream().map(entry -> entry.getKey().getName() + "^" + entry.getValue()).collect(Collectors.toSet());
+				list.add("ench:" + StringUtils.join(enchantments, "%n"));
+			}
+			list.add("flags:" + StringUtils.join(meta.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toSet()), "%n"));
+			if (meta instanceof SkullMeta) {
+				SkullMeta skullMeta = (SkullMeta) meta;
+				if (skullMeta.getOwner() != null)
+					list.add("owner:" + skullMeta.getOwner());
+			}
+			if (meta.isUnbreakable())
+				list.add("unbreakable:" + meta.isUnbreakable());
 		}
-		
-		return material.name() + "%el%" + durability + "%el%" + amount + "%el%" + dn + "%el%" + lore + "%el%" + enchantments;
+		return list;
+	}
+	
+	public static String[] toStringArray(@Nonnull ItemStack itemStack) {
+		List<String> list = toStringList(itemStack);
+		return list.toArray(new String[list.size()]);
+	}
+	
+	public static String toStringFormat(@Nonnull ItemStack itemStack) {
+		List<String> list = toStringList(itemStack);
+		return StringUtils.join(list, ";");
+	}
+	
+	public static List<String> toStringList(@Nullable String string) {
+		return Lists.newArrayList(toStringArray(string));
+	}
+	
+	public static String[] toStringArray(@Nonnull String string) {
+		return string.split(";");
 	}
 	
 	public static ItemStack toItemStack(@Nonnull String string) {
-		String[] stringData = string.split("%el%");
-		Material material = Material.valueOf(stringData[0]);
-		short durability = Short.parseShort(stringData[1]);
-		int amount = Integer.parseInt(stringData[2]);
-		String dn = stringData[3];
-		String loreString = stringData[4];
-		String enchantments = stringData[5];
+		ItemBuilder builder = null;
 		
-		List<String> lore = Lists.newArrayList();
-		String[] loreStringArray = loreString.split("%nl%");
-		for (String str : loreStringArray)
-			lore.add(str);
+		if (!string.startsWith("type:"))
+			throw new IllegalArgumentException("Parsed ItemStack must start with type!");
 		
-		if (dn.equalsIgnoreCase("null"))
-			dn = null;
-		if (loreString.equalsIgnoreCase("null"))
-			lore = null;
-		
-		ItemStack parsingStack = new ItemStack(material, amount);
-		parsingStack.setDurability(durability);
-		ItemMeta meta = parsingStack.getItemMeta();
-		meta.setDisplayName(dn);
-		meta.setLore(lore);
-		if (!enchantments.equalsIgnoreCase("null")) {
-			String[] enchantmentsArray = enchantments.split("%nxt_ench%");
-			for (String ench : enchantmentsArray) {
-				String[] enchData = ench.split("%equals%");
-				meta.addEnchant(Enchantment.getByName(enchData[0]), Integer.parseInt(enchData[1]), true);
-			}
+		for (String str : toStringArray(string)) {
+			if (str.startsWith("type:"))
+				builder = new ItemBuilder(Material.valueOf(str.replace("type:", "")));
+			else if (str.startsWith("durability:"))
+				builder.setDurability(Short.parseShort(str.replace("durability:", "")));
+			else if (str.startsWith("amount:"))
+				builder.setAmount(Integer.parseInt(str.replace("amount:", "")));
+			else if (str.startsWith("display:"))
+				builder.setDisplayName(Colors.colorize(str.replace("display:", "")));
+			else if (str.startsWith("lore:"))
+				builder.setLore(Lists.newArrayList(str.replace("lore:", "").split("%n")));
+			else if (str.startsWith("ench:")) {
+				String[] ench = str.replace("ench:", "").split("%n");
+				for (String e : ench) {
+					String[] data = e.split(Pattern.quote("^"));
+					builder.addEnchant(Enchantment.getByName(data[0]), Integer.parseInt(data[1]), true);
+				}
+			} else if (str.startsWith("flags:"))
+				builder.addItemFlags(Arrays.stream(str.replace("flags:", "").split("%n")).map(s -> ItemFlag.valueOf(s)).collect(Collectors.toList()));
+			else if (str.startsWith("owner:"))
+				builder.setOwner(str.replace("owner:", ""));
+			else if (str.startsWith("unbreakable:"))
+				builder.setUnbreakable(Boolean.valueOf(str.replace("unbreakable:", "")));
 		}
-		parsingStack.setItemMeta(meta);
-		return parsingStack;
+		return builder.build();
 	}
 	
 	private final ItemStack item;
@@ -243,6 +269,23 @@ public final class ItemBuilder implements Builder<ItemStack> {
 		skullMeta.setOwner(ownerName);
 		item.setItemMeta(skullMeta);
 		return this;
+	}
+	
+	public String getOwner() {
+		if (item.getItemMeta() instanceof SkullMeta)
+			return ((SkullMeta) item.getItemMeta()).getOwner();
+		return null;
+	}
+	
+	public ItemBuilder setUnbreakable(boolean unbreakable) {
+		ItemMeta meta = item.getItemMeta();
+		meta.setUnbreakable(unbreakable);
+		item.setItemMeta(meta);
+		return this;
+	}
+	
+	public boolean isUnbreakable() {
+		return item.getItemMeta().isUnbreakable();
 	}
 	
 	@Override
