@@ -2,7 +2,8 @@ package me.mastercapexd.commons.colors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
-import org.apache.commons.lang.enums.EnumUtils;
+
+import me.mastercapexd.commons.util.EnumUtils;
 
 public enum Color {
 

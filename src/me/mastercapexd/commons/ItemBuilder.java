@@ -32,7 +32,7 @@ public final class ItemBuilder implements Builder<ItemStack> {
 		List<String> list = Lists.newArrayList();
 		ItemMeta meta = itemStack.getItemMeta();
 		
-		list.add("name:" + itemStack.getType().name());
+		list.add("type:" + itemStack.getType().name());
 		list.add("durability:" + itemStack.getDurability());
 		list.add("amount:" + itemStack.getAmount());
 		if (meta != null) {
@@ -98,7 +98,7 @@ public final class ItemBuilder implements Builder<ItemStack> {
 					builder.addEnchant(Enchantment.getByName(data[0]), Integer.parseInt(data[1]), true);
 				}
 			} else if (str.startsWith("flags:"))
-				builder.addItemFlags(Arrays.stream(str.replace("flags:", "").split("%n")).map(s -> ItemFlag.valueOf(s)).collect(Collectors.toList()));
+				builder.addItemFlags(Arrays.stream(str.replace("flags:", "").split("%n")).filter(s -> !s.isEmpty()).map(s -> ItemFlag.valueOf(s)).collect(Collectors.toList()));
 			else if (str.startsWith("owner:"))
 				builder.setOwner(str.replace("owner:", ""));
 			else if (str.startsWith("unbreakable:"))
