@@ -63,7 +63,7 @@ public final class ItemBuilder implements Builder<ItemStack> {
 	
 	public static String toStringFormat(@Nonnull ItemStack itemStack) {
 		List<String> list = toStringList(itemStack);
-		return StringUtils.join(list, ";");
+		return toStringFormat(list);
 	}
 	
 	public static List<String> toStringList(@Nullable String string) {
@@ -72,6 +72,10 @@ public final class ItemBuilder implements Builder<ItemStack> {
 	
 	public static String[] toStringArray(@Nonnull String string) {
 		return string.split(";");
+	}
+	
+	public static String toStringFormat(@Nonnull List<String> list) {
+		return StringUtils.join(list, ";");
 	}
 	
 	public static ItemStack toItemStack(@Nonnull String string) {
@@ -105,6 +109,10 @@ public final class ItemBuilder implements Builder<ItemStack> {
 				builder.setUnbreakable(Boolean.valueOf(str.replace("unbreakable:", "")));
 		}
 		return builder.build();
+	}
+	
+	public static ItemStack toItemStack(@Nonnull List<String> list) {
+		return toItemStack(toStringFormat(list));
 	}
 	
 	private final ItemStack item;
