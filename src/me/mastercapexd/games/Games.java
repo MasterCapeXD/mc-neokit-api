@@ -1,7 +1,6 @@
 package me.mastercapexd.games;
 
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +13,6 @@ import com.google.common.collect.Maps;
 
 import me.mastercapexd.commons.Events;
 import me.mastercapexd.commons.IdentifierType;
-import me.mastercapexd.commons.Players;
 import me.mastercapexd.commons.events.SingleEventSubscriptionBuilder;
 
 public class Games {
@@ -65,17 +63,11 @@ public class Games {
 	
 	@Nonnull
 	public static GamePlayer getGamePlayer(@Nonnull Player player) {
-		return PLAYERS.get(player);
+		return PLAYERS.getOrDefault(getCurrentIdentifierType() == IdentifierType.NAME ? player.getName() : player.getUniqueId().toString(), null);
 	}
 	
 	@Nonnull
-	public static GamePlayer getGamePlayer(@Nonnull String id, @Nonnull IdentifierType type) {
-		switch (type) {
-		case NAME:
-			return PLAYERS.get(Players.getNullable(id));
-		case UUID:
-			return PLAYERS.get(Players.getNullable(UUID.fromString(id)));
-		}
-		return null;
+	public static GamePlayer getGamePlayer(@Nonnull String id) {
+		return PLAYERS.getOrDefault(id, null);
 	}
 }
