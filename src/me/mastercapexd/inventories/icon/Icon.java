@@ -11,7 +11,7 @@ import me.mastercapexd.inventories.ClickData;
 
 public interface Icon {
 
-	static final Icon EMPTY_REPLACEABLE = of(new ItemStack(Material.AIR), data -> true);
+	static final Icon EMPTY_REPLACEABLE = of(new ItemStack(Material.AIR), data -> false);
 	static final Icon EMPTY = of(new ItemStack(Material.AIR));
 	
 	@Nonnull
@@ -20,13 +20,13 @@ public interface Icon {
 	}
 	
 	@Nonnull
-	static Icon of(@Nonnull ItemStack itemStack, boolean takeable) {
-		return of(itemStack, takeable);
+	static Icon of(@Nonnull ItemStack itemStack, boolean cancel) {
+		return of(itemStack, data -> cancel);
 	}
 	
 	@Nonnull
-	static Icon of(@Nonnull ItemStack itemStack, @Nonnull Predicate<ClickData> consumer) {
-		return new AbstractIcon(consumer) {
+	static Icon of(@Nonnull ItemStack itemStack, @Nonnull Predicate<ClickData> predicate) {
+		return new AbstractIcon(predicate) {
 			
 			@Override
 			public ItemStack getIcon() {
