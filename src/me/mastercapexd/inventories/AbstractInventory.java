@@ -12,10 +12,7 @@ import org.bukkit.plugin.Plugin;
 
 import me.mastercapexd.commons.Events;
 import me.mastercapexd.commons.events.ExpiryTestStage;
-import me.mastercapexd.inventories.global.GlobalViewInventory;
 import me.mastercapexd.inventories.icon.Icon;
-import me.mastercapexd.inventories.paginated.PaginatedInventory;
-import me.mastercapexd.inventories.personal.PersonalViewInventory;
 
 public abstract class AbstractInventory implements InventoryBase {
 
@@ -77,18 +74,7 @@ public abstract class AbstractInventory implements InventoryBase {
 			.handle(event -> {
 				InventoryView view = (InventoryView) event.getClickedInventory().getHolder();
 				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), event.getRawSlot(), event.getAction());
-				
-				Icon icon = null;
-				int absoluteSlot = event.getRawSlot();
-				if (view.getOwner() instanceof PaginatedInventory) {
-					PaginatedInventory inventory = ((PaginatedInventory) view.getOwner());
-					absoluteSlot = inventory.getAbsoluteSlot(inventory.getCurrentPage((Player) event.getWhoClicked()), event.getRawSlot());
-					icon = inventory.getIcon(player, absoluteSlot);
-				} else if (view.getOwner() instanceof PersonalViewInventory)
-					icon = ((PersonalViewInventory) view.getOwner()).getIcon(player, event.getRawSlot());
-				else if (view.getOwner() instanceof GlobalViewInventory)
-					icon = ((GlobalViewInventory) view.getOwner()).getIcon(event.getRawSlot());
-				
+				Icon icon = getIcon(data);
 				event.setCancelled(icon.getClickAction().test(data));
 			})
 			.register(getPlugin());

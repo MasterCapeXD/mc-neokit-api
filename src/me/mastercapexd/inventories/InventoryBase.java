@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import me.mastercapexd.inventories.icon.Icon;
+
 public interface InventoryBase {
 
 	@Nonnull
@@ -29,6 +31,8 @@ public interface InventoryBase {
 	void close(@Nonnull Player player);
 	
 	void refresh(@Nonnull Player player);
+	
+	Icon getIcon(ClickData data);
 	
 	default boolean isViewing(@Nonnull Player player) {
 		return getCurrentViewers().contains(player);

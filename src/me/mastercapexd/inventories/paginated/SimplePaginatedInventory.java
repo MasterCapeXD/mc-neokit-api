@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import me.mastercapexd.inventories.ClickData;
 import me.mastercapexd.inventories.InventoryData;
 import me.mastercapexd.inventories.icon.Icon;
 import me.mastercapexd.inventories.personal.PersonalViewInventory;
@@ -133,5 +134,10 @@ public class SimplePaginatedInventory extends SimplePersonalViewInventory implem
 			pages++;
 		}
 		return pages;
+	}
+	
+	@Override
+	public Icon getIcon(ClickData data) {
+		return getIconAt(data.getIssuer(), getCurrentPage(data.getIssuer()), data.getClickedSlot());
 	}
 }

@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 import com.google.common.collect.Maps;
 
 import me.mastercapexd.inventories.AbstractInventory;
+import me.mastercapexd.inventories.ClickData;
 import me.mastercapexd.inventories.InventoryData;
 import me.mastercapexd.inventories.InventoryView;
 import me.mastercapexd.inventories.icon.Icon;
@@ -58,6 +59,11 @@ public class SimpleGlobalViewInventory extends AbstractInventory implements Glob
 		for (Entry<Integer, Icon> entry : icons.entrySet())
 			view.getInventory().setItem(entry.getKey(), entry.getValue().getIcon());
 		player.updateInventory();
+	}
+	
+	@Override
+	public Icon getIcon(ClickData data) {
+		return getIcon(data.getClickedSlot());
 	}
 	
 	@Nonnull

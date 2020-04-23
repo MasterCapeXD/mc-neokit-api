@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import me.mastercapexd.inventories.InventoryData;
+import me.mastercapexd.inventories.icon.AbstractIcon;
+import me.mastercapexd.inventories.icon.Icon;
 
 public class InventoryBaseBuilder implements InventoryBuilder<InventoryBaseBuilder, InventoryBase> {
 
@@ -59,6 +61,11 @@ public class InventoryBaseBuilder implements InventoryBuilder<InventoryBaseBuild
 			@Override
 			public Collection<Player> getCurrentViewers() {
 				return Collections.emptySet();
+			}
+			
+			@Override
+			public Icon getIcon(ClickData data) {
+				return AbstractIcon.EMPTY_REPLACEABLE;
 			}
 		};
 	}

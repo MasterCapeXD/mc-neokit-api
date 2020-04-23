@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
 import me.mastercapexd.inventories.AbstractInventory;
+import me.mastercapexd.inventories.ClickData;
 import me.mastercapexd.inventories.InventoryData;
 import me.mastercapexd.inventories.InventoryView;
 import me.mastercapexd.inventories.icon.Icon;
@@ -85,6 +86,11 @@ public class SimplePersonalViewInventory extends AbstractInventory implements Pe
 		
 		for (Entry<Integer, Icon> entry : icons.get(player).entrySet())
 			viewers.get(player).getInventory().setItem(entry.getKey(), entry.getValue().getIcon());
+	}
+	
+	@Override
+	public Icon getIcon(ClickData data) {
+		return getIcon(data.getIssuer(), data.getClickedSlot());
 	}
 	
 	@Nonnull
