@@ -84,15 +84,12 @@ public abstract class AbstractInventory implements InventoryBase {
 					PaginatedInventory inventory = ((PaginatedInventory) view.getOwner());
 					absoluteSlot = inventory.getAbsoluteSlot(inventory.getCurrentPage((Player) event.getWhoClicked()), event.getRawSlot());
 					icon = inventory.getIcon(player, absoluteSlot);
-					if (icon.isTakeable() && event.getCursor() != null)
-						inventory.setIcon(player, absoluteSlot, Icon.of(event.getCursor(), clickData -> {}, true));
 				} else if (view.getOwner() instanceof PersonalViewInventory)
 					icon = ((PersonalViewInventory) view.getOwner()).getIcon(player, event.getRawSlot());
 				else if (view.getOwner() instanceof GlobalViewInventory)
 					icon = ((GlobalViewInventory) view.getOwner()).getIcon(event.getRawSlot());
 				
-				icon.getClickAction().accept(data);
-				event.setCancelled(!icon.isTakeable());
+				event.setCancelled(icon.getClickAction().test(data));
 			})
 			.register(getPlugin());
 	

@@ -1,6 +1,6 @@
 package me.mastercapexd.inventories.icon;
 
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -10,23 +10,16 @@ import me.mastercapexd.inventories.ClickData;
 
 public abstract class AbstractIcon implements Icon {
 
-	private final Consumer<ClickData> clickAction;
-	private final boolean takeable;
+	private final Predicate<ClickData> clickAction;
 	
-	public AbstractIcon(@Nonnull Consumer<ClickData> clickAction, boolean takeable) {
+	public AbstractIcon(@Nonnull Predicate<ClickData> clickAction) {
 		this.clickAction = clickAction;
-		this.takeable = takeable;
 	}
 	
 	@Nonnull
 	@Override
-	public Consumer<ClickData> getClickAction() {
+	public Predicate<ClickData> getClickAction() {
 		return clickAction;
-	}
-	
-	@Override
-	public boolean isTakeable() {
-		return takeable;
 	}
 	
 	@Override
@@ -38,11 +31,11 @@ public abstract class AbstractIcon implements Icon {
 			return false;
 		
 		Icon icon = (Icon) obj;
-		return this.getIcon().equals(icon.getIcon()) && this.clickAction == icon.getClickAction() && this.takeable == icon.isTakeable();
+		return this.getIcon().equals(icon.getIcon()) && this.clickAction == icon.getClickAction();
 	}
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(clickAction).append(takeable).append(getIcon()).build();
+		return new HashCodeBuilder().append(clickAction).append(getIcon()).build();
 	}
 }

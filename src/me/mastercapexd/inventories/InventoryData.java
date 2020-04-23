@@ -32,6 +32,6 @@ public interface InventoryData {
 	
 	@Nonnull
 	default InventoryBase getInventoryBase() {
-		return (InventoryBase) getInventory().getHolder();
+		return ((InventoryView) getInventory().getHolder()).getOwner();
 	}
 }
