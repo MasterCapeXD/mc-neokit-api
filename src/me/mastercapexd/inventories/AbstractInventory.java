@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -94,6 +95,19 @@ public abstract class AbstractInventory implements InventoryBase {
 				event.setCancelled(icon.getClickAction().test(data));
 			})
 			.register(getPlugin());
+		
+		Events.subscribe(InventoryDragEvent.class)
+		.filter(event -> event.getInventory() != null)
+		.filter(event -> event.getInventory().getHolder() instanceof InventoryView)
+		.filter(event -> event.getWhoClicked() == player)
+		
+		.expiresIf((subscription, event) -> {
+			InventoryView view = (InventoryView) event.getInventory().getHolder();
+			return !view.getOwner().isViewing(player);
+		}, ExpiryTestStage.POST_FILTER)
+		
+		.handle(event -> event.setCancelled(true))
+		.register(getPlugin());
 	
 		Events.subscribe(InventoryCloseEvent.class)
 			.filter(event -> event.getInventory().getHolder() instanceof InventoryView)
