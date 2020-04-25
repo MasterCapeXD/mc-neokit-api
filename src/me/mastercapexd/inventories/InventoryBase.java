@@ -34,8 +34,6 @@ public interface InventoryBase {
 	
 	Icon getIcon(ClickData data);
 	
-	boolean handleBottomClicks();
-	
 	default boolean isViewing(@Nonnull Player player) {
 		return getCurrentViewers().contains(player);
 	}

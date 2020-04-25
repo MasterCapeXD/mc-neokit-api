@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -21,14 +20,12 @@ public abstract class AbstractInventory implements InventoryBase {
 	private final Plugin plugin;
 	private final int rows;
 	private final Consumer<InventoryData> opening, closing;
-	private final boolean handleBottomClicks;
 	
-	public AbstractInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening, @Nonnull Consumer<InventoryData> closing, boolean handleBottomClicks) {
+	public AbstractInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening, @Nonnull Consumer<InventoryData> closing) {
 		this.plugin = plugin;
 		this.rows = rows;
 		this.opening = opening;
 		this.closing = closing;
-		this.handleBottomClicks = handleBottomClicks;
 	}
 	
 	@Nonnull
@@ -52,11 +49,6 @@ public abstract class AbstractInventory implements InventoryBase {
 	@Override
 	public Consumer<InventoryData> getClosingAction() {
 		return closing;
-	}
-	
-	@Override
-	public boolean handleBottomClicks() {
-		return handleBottomClicks;
 	}
 	
 	protected void listenView(@Nonnull Player player) {
@@ -83,16 +75,14 @@ public abstract class AbstractInventory implements InventoryBase {
 			.handle(event -> {
 				boolean isBottomClick = event.getClickedInventory().equals(event.getView().getBottomInventory());
 				if (isBottomClick) {
-					if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR)
-						event.setCancelled(true);
-					if (!handleBottomClicks())
-						return;
+					event.setCancelled(true);
 				}
 				
 				InventoryView view = (InventoryView) event.getView().getTopInventory().getHolder();
-				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), isBottomClick ? event.getSlot() : event.getRawSlot(), event.getAction(), event.getView().getBottomInventory(), isBottomClick);
+				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), event.getRawSlot(), event.getAction());
 				Icon icon = getIcon(data);
-				event.setCancelled(icon.getClickAction().test(data));
+				icon.getClickAction().accept(data);
+				event.setCancelled(true);
 			})
 			.register(getPlugin());
 		

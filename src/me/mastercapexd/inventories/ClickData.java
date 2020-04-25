@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 public interface ClickData extends InventoryData {
 
 	@Nonnull
-	static ClickData create(@Nonnull HumanEntity entity, @Nonnull Inventory inventory, @Nonnull ClickType clickType, int slot, @Nonnull InventoryAction action, Inventory bottom, boolean isBottomClick) {
+	static ClickData create(@Nonnull HumanEntity entity, @Nonnull Inventory inventory, @Nonnull ClickType clickType, int slot, @Nonnull InventoryAction action) {
 		return new ClickData() {
 			
 			@Override
@@ -38,16 +38,6 @@ public interface ClickData extends InventoryData {
 			public InventoryAction getAction() {
 				return action;
 			}
-			
-			@Override
-			public boolean isBottomClick() {
-				return isBottomClick;
-			}
-			
-			@Override
-			public Inventory getBottom() {
-				return bottom;
-			}
 		};
 	}
 	
@@ -58,8 +48,4 @@ public interface ClickData extends InventoryData {
 	InventoryAction getAction();
 	
 	int getClickedSlot();
-	
-	boolean isBottomClick();
-	
-	Inventory getBottom();
 }

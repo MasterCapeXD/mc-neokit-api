@@ -45,12 +45,6 @@ public class SimpleGlobalViewInventoryBuilder implements GlobalInventoryBuilder 
 		return this;
 	}
 	
-	@Override
-	public GlobalInventoryBuilder handleBottomClicks(boolean handleBottomClicks) {
-		baseBuilder.handleBottomClicks(handleBottomClicks);
-		return this;
-	}
-	
 	@Nonnull
 	@Override
 	public GlobalInventoryBuilder setTitle(@Nonnull String title) {
@@ -69,6 +63,6 @@ public class SimpleGlobalViewInventoryBuilder implements GlobalInventoryBuilder 
 	@Override
 	public GlobalViewInventory build() {
 		InventoryBase inventoryBase = baseBuilder.build();
-		return new SimpleGlobalViewInventory(inventoryBase.getPlugin(), inventoryBase.getRows(), inventoryBase.getOpeningAction(), inventoryBase.getClosingAction(), inventoryBase.handleBottomClicks(), title, icons);
+		return new SimpleGlobalViewInventory(inventoryBase.getPlugin(), inventoryBase.getRows(), inventoryBase.getOpeningAction(), inventoryBase.getClosingAction(), title, icons);
 	}
 }

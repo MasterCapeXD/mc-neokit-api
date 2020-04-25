@@ -1,6 +1,6 @@
 package me.mastercapexd.inventories.icon;
 
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
@@ -11,22 +11,16 @@ import me.mastercapexd.inventories.ClickData;
 
 public interface Icon {
 
-	static final Icon EMPTY_REPLACEABLE = of(new ItemStack(Material.AIR), data -> false);
 	static final Icon EMPTY = of(new ItemStack(Material.AIR));
 	
 	@Nonnull
 	static Icon of(@Nonnull ItemStack itemStack) {
-		return of(itemStack, data -> true);
+		return of(itemStack, data -> {});
 	}
 	
 	@Nonnull
-	static Icon of(@Nonnull ItemStack itemStack, boolean cancel) {
-		return of(itemStack, data -> cancel);
-	}
-	
-	@Nonnull
-	static Icon of(@Nonnull ItemStack itemStack, @Nonnull Predicate<ClickData> predicate) {
-		return new AbstractIcon(predicate) {
+	static Icon of(@Nonnull ItemStack itemStack, @Nonnull Consumer<ClickData> consumer) {
+		return new AbstractIcon(consumer) {
 			
 			@Override
 			public ItemStack getIcon() {
@@ -39,5 +33,5 @@ public interface Icon {
 	ItemStack getIcon();
 	
 	@Nonnull
-	Predicate<ClickData> getClickAction();
+	Consumer<ClickData> getClickAction();
 }

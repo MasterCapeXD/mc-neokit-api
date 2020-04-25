@@ -32,8 +32,8 @@ public class SimplePersonalViewInventory extends AbstractInventory implements Pe
 	protected final Map<Player, Map<Integer, Icon>> icons;
 	
 	public SimplePersonalViewInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening,
-			@Nonnull Consumer<InventoryData> closing, boolean handleBottomClicks, @Nonnull BiFunction<Player, PersonalViewInventory, String> titleApplier, @Nonnull List<Pair<Function<Player, Integer>, Function<Player, Icon>>> defaultIcons) {
-		super(plugin, rows, opening, closing, handleBottomClicks);
+			@Nonnull Consumer<InventoryData> closing, @Nonnull BiFunction<Player, PersonalViewInventory, String> titleApplier, @Nonnull List<Pair<Function<Player, Integer>, Function<Player, Icon>>> defaultIcons) {
+		super(plugin, rows, opening, closing);
 		this.titleApplier = titleApplier;
 		this.defaultIcons = defaultIcons;
 		this.icons = Maps.newHashMap();

@@ -26,6 +26,6 @@ public class SimplePaginatedInventoryBuilder extends SimplePersonalViewInventory
 	@Override
 	public PaginatedInventory build() {
 		InventoryBase inventoryBase = baseBuilder.build();
-		return new SimplePaginatedInventory(inventoryBase.getPlugin(), inventoryBase.getRows(), inventoryBase.getOpeningAction(), inventoryBase.getClosingAction(), inventoryBase.handleBottomClicks(), titleApplier, defaultIcons, contentSlots);
+		return new SimplePaginatedInventory(inventoryBase.getPlugin(), inventoryBase.getRows(), inventoryBase.getOpeningAction(), inventoryBase.getClosingAction(), titleApplier, defaultIcons, contentSlots);
 	}
 }

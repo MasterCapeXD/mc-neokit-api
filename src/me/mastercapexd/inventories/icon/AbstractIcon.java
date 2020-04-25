@@ -1,6 +1,6 @@
 package me.mastercapexd.inventories.icon;
 
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
@@ -10,15 +10,15 @@ import me.mastercapexd.inventories.ClickData;
 
 public abstract class AbstractIcon implements Icon {
 
-	private final Predicate<ClickData> clickAction;
+	private final Consumer<ClickData> clickAction;
 	
-	public AbstractIcon(@Nonnull Predicate<ClickData> clickAction) {
+	public AbstractIcon(@Nonnull Consumer<ClickData> clickAction) {
 		this.clickAction = clickAction;
 	}
 	
 	@Nonnull
 	@Override
-	public Predicate<ClickData> getClickAction() {
+	public Consumer<ClickData> getClickAction() {
 		return clickAction;
 	}
 	
