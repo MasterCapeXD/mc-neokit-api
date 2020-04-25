@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 public interface GamePlayer extends GameEntity<Player> {
 
-	void join(@Nonnull GameBox box);
+	<T extends Team> void join(@Nonnull GameBox<T> box);
 	
 	void quit();
 	

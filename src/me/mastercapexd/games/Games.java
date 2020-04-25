@@ -17,7 +17,7 @@ import me.mastercapexd.commons.events.SingleEventSubscriptionBuilder;
 
 public class Games {
 
-	private static final Map<String, Game> GAMES = Maps.newHashMap();
+	private static final Map<String, Game<?>> GAMES = Maps.newHashMap();
 	private static final Map<String, GamePlayer> PLAYERS = Maps.newHashMap();
 	private static final SingleEventSubscriptionBuilder<?> JOIN, QUIT;
 	
@@ -33,11 +33,14 @@ public class Games {
 		QUIT = Events.subscribe(PlayerQuitEvent.class, EventPriority.MONITOR)
 		.handle(event -> {
 			String id = identifierType == IdentifierType.NAME ? event.getPlayer().getName() : event.getPlayer().getUniqueId().toString();
+			GamePlayer player = getGamePlayer(id);
+			if (player.isPlaying())
+				player.quit();
 			PLAYERS.remove(id);
 		});
 	}
 	
-	public static void registerGame(@Nonnull Game game) {
+	public static void registerGame(@Nonnull Game<?> game) {
 		if (!JOIN.registered())
 			JOIN.register(game.getPlugin());
 		if (!QUIT.registered())

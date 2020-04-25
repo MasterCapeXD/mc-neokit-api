@@ -1,4 +1,4 @@
-package me.mastercapexd.games.event;
+package me.mastercapexd.games.event.internal;
 
 import javax.annotation.Nonnull;
 
@@ -8,8 +8,9 @@ import org.bukkit.event.HandlerList;
 
 import me.mastercapexd.games.GameBox;
 import me.mastercapexd.games.GamePlayer;
+import me.mastercapexd.games.Team;
 
-public class GameBoxPlayerJoinEvent extends Event implements Cancellable {
+public class PlayerTeamLeaveEvent extends Event implements Cancellable {
 
 	private static final HandlerList HANDLER_LIST = new HandlerList();
 	
@@ -18,12 +19,12 @@ public class GameBoxPlayerJoinEvent extends Event implements Cancellable {
 	}
 	
 	private final GamePlayer player;
-	private final GameBox box;
+	private final Team team;
 	private boolean cancelled;
 	
-	public GameBoxPlayerJoinEvent(@Nonnull GamePlayer player, @Nonnull GameBox box) {
+	public PlayerTeamLeaveEvent(@Nonnull GamePlayer player, @Nonnull Team team) {
 		this.player = player;
-		this.box = box;
+		this.team = team;
 	}
 	
 	@Nonnull
@@ -32,8 +33,13 @@ public class GameBoxPlayerJoinEvent extends Event implements Cancellable {
 	}
 	
 	@Nonnull
-	public GameBox getGameBox() {
-		return box;
+	public Team getTeam() {
+		return team;
+	}
+	
+	@Nonnull
+	public GameBox<?> getGameBox() {
+		return player.getGameBox();
 	}
 	
 	@Override

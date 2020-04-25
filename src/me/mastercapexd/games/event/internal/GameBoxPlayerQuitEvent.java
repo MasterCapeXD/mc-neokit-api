@@ -1,4 +1,4 @@
-package me.mastercapexd.games.event;
+package me.mastercapexd.games.event.internal;
 
 import javax.annotation.Nonnull;
 
@@ -18,10 +18,10 @@ public class GameBoxPlayerQuitEvent extends Event implements Cancellable {
 	}
 	
 	private final GamePlayer player;
-	private final GameBox box;
+	private final GameBox<?> box;
 	private boolean cancelled;
 	
-	public GameBoxPlayerQuitEvent(@Nonnull GamePlayer player, @Nonnull GameBox box) {
+	public GameBoxPlayerQuitEvent(@Nonnull GamePlayer player, @Nonnull GameBox<?> box) {
 		this.player = player;
 		this.box = box;
 	}
@@ -32,7 +32,7 @@ public class GameBoxPlayerQuitEvent extends Event implements Cancellable {
 	}
 	
 	@Nonnull
-	public GameBox getGameBox() {
+	public GameBox<?> getGameBox() {
 		return box;
 	}
 	

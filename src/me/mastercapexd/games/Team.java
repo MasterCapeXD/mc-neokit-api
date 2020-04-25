@@ -10,4 +10,7 @@ public interface Team extends Identifiable<String>, EntityRepository {
 	String getDisplayName();
 	
 	int getTeamSlots();
+	
+	@Nonnull
+	GameData getData();
 }

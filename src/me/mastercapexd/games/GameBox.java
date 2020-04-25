@@ -6,11 +6,20 @@ import javax.annotation.Nonnull;
 
 import me.mastercapexd.commons.Identifiable;
 
-public interface GameBox extends Identifiable<String>, EntityRepository, ActionRepository {
+public interface GameBox<T extends Team> extends Identifiable<String>, EntityRepository {
 
 	@Nonnull
-	Collection<Team> getRegisteredTeams();
+	Collection<T> getRegisteredTeams();
 	
 	@Nonnull
-	Team getTeam(@Nonnull String id);
+	T getTeam(@Nonnull String id);
+	
+	@Nonnull
+	GameData getData();
+	
+	void enable();
+	
+	void disable();
+	
+	boolean isEnabled();
 }

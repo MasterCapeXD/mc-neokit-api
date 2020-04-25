@@ -5,10 +5,10 @@ import javax.annotation.Nonnull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import me.mastercapexd.games.event.GameBoxPlayerJoinEvent;
-import me.mastercapexd.games.event.GameBoxPlayerQuitEvent;
-import me.mastercapexd.games.event.PlayerTeamJoinEvent;
-import me.mastercapexd.games.event.PlayerTeamLeaveEvent;
+import me.mastercapexd.games.event.internal.GameBoxPlayerJoinEvent;
+import me.mastercapexd.games.event.internal.GameBoxPlayerQuitEvent;
+import me.mastercapexd.games.event.internal.PlayerTeamJoinEvent;
+import me.mastercapexd.games.event.internal.PlayerTeamLeaveEvent;
 
 public class BasePlayer extends BaseEntity<Player> implements GamePlayer {
 
@@ -16,17 +16,19 @@ public class BasePlayer extends BaseEntity<Player> implements GamePlayer {
 		super(id, entity);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public void join(@Nonnull GameBox box) {
+	public <T extends Team> void join(@Nonnull GameBox<T> box) {
+		if (this.getGameBox() != null)
+			quit();
+		
 		GameBoxPlayerJoinEvent event = new GameBoxPlayerJoinEvent(this, box);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			return;
 		
-		if (this.getGameBox() != null)
-			quit();
 		this.box = box;
-		((BaseGameBox) this.box).addEntity(this);
+		((BaseGameBox<T>) this.box).addEntity(this);
 	}
 	
 	@Override
@@ -40,7 +42,7 @@ public class BasePlayer extends BaseEntity<Player> implements GamePlayer {
 			return;
 		
 		leave();
-		((BaseGameBox) this.box).removeEntity(this);
+		((BaseGameBox<?>) this.box).removeEntity(this);
 		this.box = null;
 	}
 	
@@ -49,13 +51,14 @@ public class BasePlayer extends BaseEntity<Player> implements GamePlayer {
 		if (this.getGameBox() == null || this.getGameBox().getTeam(team.getIdentifier()) == null)
 			return;
 		
+		if (this.getTeam() != null)
+			leave();
+		
 		PlayerTeamJoinEvent event = new PlayerTeamJoinEvent(this, team);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			return;
 		
-		if (this.getTeam() != null)
-			leave();
 		this.team = team;
 		((BaseTeam) this.team).addEntity(this);
 	}

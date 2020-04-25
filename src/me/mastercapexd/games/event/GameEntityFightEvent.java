@@ -18,19 +18,19 @@ public class GameEntityFightEvent extends Event implements Cancellable {
 		return HANDLER_LIST;
 	}
 	
-	private final GameBox box;
+	private final GameBox<?> box;
 	private final GameEntity<? extends Entity> attacker, entity;
 	
 	private boolean cancelled;
 	
-	public GameEntityFightEvent(@Nonnull GameBox box, @Nonnull GameEntity<? extends Entity> attacker, @Nonnull GameEntity<? extends Entity> entity) {
+	public GameEntityFightEvent(@Nonnull GameBox<?> box, @Nonnull GameEntity<? extends Entity> attacker, @Nonnull GameEntity<? extends Entity> entity) {
 		this.box = box;
 		this.attacker = attacker;
 		this.entity = entity;
 	}
 	
 	@Nonnull
-	public GameBox getBox() {
+	public GameBox<?> getBox() {
 		return box;
 	}
 	

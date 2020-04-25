@@ -15,11 +15,13 @@ public class BaseTeam implements Team {
 
 	private final String id, displayName;
 	private final Map<Entity, GameEntity<?>> entities = Maps.newHashMap();
+	private final GameData data;
 	private final int slots;
 	
 	public BaseTeam(@Nonnull String id, @Nonnull String displayName, int slots) {
 		this.id = id;
 		this.displayName = displayName;
+		this.data = new BaseGameData();
 		this.slots = slots;
 	}
 	
@@ -51,6 +53,11 @@ public class BaseTeam implements Team {
 	@Override
 	public int getTeamSlots() {
 		return slots;
+	}
+	
+	@Override
+	public GameData getData() {
+		return data;
 	}
 	
 	public void addEntity(@Nonnull GameEntity<?> entity) {

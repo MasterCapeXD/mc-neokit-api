@@ -1,4 +1,4 @@
-package me.mastercapexd.games.event;
+package me.mastercapexd.games.event.internal;
 
 import javax.annotation.Nonnull;
 
@@ -38,7 +38,7 @@ public class PlayerTeamJoinEvent extends Event implements Cancellable {
 	}
 	
 	@Nonnull
-	public GameBox getGameBox() {
+	public GameBox<?> getGameBox() {
 		return player.getGameBox();
 	}
 	

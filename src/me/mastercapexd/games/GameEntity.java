@@ -10,7 +10,7 @@ import me.mastercapexd.commons.Identifiable;
 public interface GameEntity<E extends Entity> extends Identifiable<String> {
 
 	@Nullable
-	GameBox getGameBox();
+	GameBox<?> getGameBox();
 	
 	@Nullable
 	Team getTeam();
@@ -19,4 +19,7 @@ public interface GameEntity<E extends Entity> extends Identifiable<String> {
 	
 	@Nonnull
 	E getSource();
+	
+	@Nonnull
+	GameData getData();
 }

@@ -8,25 +8,22 @@ import javax.annotation.Nullable;
 
 import org.bukkit.entity.Entity;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
-public class BaseGameBox implements GameBox {
+public class BaseGameBox<T extends Team> implements GameBox<T> {
 
 	private final String id;
 	private final Map<Entity, GameEntity<?>> entities = Maps.newHashMap();
-	private final Map<String, Team> teams;
-	private final Map<String, GameAction> actions;
+	private final Map<String, T> teams = Maps.newHashMap();
+	private boolean enabled;
+	private final GameData data;
 	
-	public BaseGameBox(@Nonnull String id, @Nonnull Collection<Team> teams, @Nonnull Map<String, GameAction> actions) {
+	public BaseGameBox(@Nonnull String id, Collection<T> teams) {
 		this.id = id;
-		com.google.common.collect.ImmutableMap.Builder<String, Team> builder = ImmutableMap .<String, Team> builder();
-		for (Team team : teams)
-			builder.put(team.getIdentifier(), team);
-		this.teams = builder.build();
-		this.actions = actions;
+		for (T team : teams)
+			this.teams.put(team.getIdentifier(), team);
+		this.data = new BaseGameData();
 	}
 	
 	@Nonnull
@@ -43,26 +40,25 @@ public class BaseGameBox implements GameBox {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Entity> GameEntity<T> getEntityNullable(T entity) {
-		return (GameEntity<T>) entities.get(entity);
+	public <E extends Entity> GameEntity<E> getEntityNullable(E entity) {
+		return (GameEntity<E>) entities.get(entity);
 	}
 	
 	@Nonnull
 	@Override
-	public Collection<Team> getRegisteredTeams() {
+	public Collection<T> getRegisteredTeams() {
 		return ImmutableSet.copyOf(teams.values());
 	}
 	
 	@Nullable
 	@Override
-	public Team getTeam(String id) {
+	public T getTeam(String id) {
 		return teams.get(id);
 	}
 	
-	@Nullable
 	@Override
-	public GameAction getGameAction(String id) {
-		return actions.get(id);
+	public GameData getData() {
+		return data;
 	}
 	
 	public void addEntity(GameEntity<?> entity) {
@@ -73,32 +69,18 @@ public class BaseGameBox implements GameBox {
 		entities.remove(entity.getSource());
 	}
 	
-	public static class Builder implements org.apache.commons.lang3.builder.Builder<GameBox> {
-		
-		protected final String id;
-		protected final Map<String, GameAction> actions = Maps.newHashMap();
-		protected final Collection<Team> teams = Sets.newHashSet();
-		
-		public Builder(@Nonnull String id) {
-			this.id = id;
-		}
-		
-		@Nonnull
-		public Builder registerGameAction(@Nonnull GameAction action) {
-			actions.put(action.getIdentifier(), action);
-			return this;
-		}
-		
-		@Nonnull
-		public Builder registerTeam(@Nonnull Team team) {
-			teams.add(team);
-			return this;
-		}
-		
-		@Nonnull
-		@Override
-		public GameBox build() {
-			return new BaseGameBox(id, teams, actions);
-		}
+	@Override
+	public void enable() {
+		this.enabled = true;
+	}
+	
+	@Override
+	public void disable() {
+		this.enabled = false;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 }
