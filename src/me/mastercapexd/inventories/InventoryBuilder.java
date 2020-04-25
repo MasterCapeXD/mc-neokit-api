@@ -16,4 +16,7 @@ public interface InventoryBuilder<B extends InventoryBuilder<B, R>, R extends In
 	
 	@Nonnull
 	B addClosingAction(@Nonnull Consumer<InventoryData> consumer);
+	
+	@Nonnull
+	B handleBottomClicks(boolean handleBottomClicks);
 }

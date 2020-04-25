@@ -49,6 +49,13 @@ public class SimplePersonalViewInventoryBuilder implements PersonalInventoryBuil
 		return this;
 	}
 	
+	@Override
+	public PersonalInventoryBuilder handleBottomClicks(boolean handleBottomClicks) {
+		baseBuilder.handleBottomClicks(handleBottomClicks);
+		return this;
+	}
+	
+	
 	@Nonnull
 	@Override
 	public PersonalInventoryBuilder setTitleApplier(BiFunction<Player, PersonalViewInventory, String> titleApplier) {
@@ -67,6 +74,6 @@ public class SimplePersonalViewInventoryBuilder implements PersonalInventoryBuil
 	@Override
 	public PersonalViewInventory build() {
 		InventoryBase inventoryBase = baseBuilder.build();
-		return new SimplePersonalViewInventory(inventoryBase.getPlugin(), inventoryBase.getRows(), inventoryBase.getOpeningAction(), inventoryBase.getClosingAction(), titleApplier, defaultIcons);
+		return new SimplePersonalViewInventory(inventoryBase.getPlugin(), inventoryBase.getRows(), inventoryBase.getOpeningAction(), inventoryBase.getClosingAction(), inventoryBase.handleBottomClicks(), titleApplier, defaultIcons);
 	}
 }

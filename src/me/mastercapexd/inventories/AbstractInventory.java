@@ -20,12 +20,14 @@ public abstract class AbstractInventory implements InventoryBase {
 	private final Plugin plugin;
 	private final int rows;
 	private final Consumer<InventoryData> opening, closing;
+	private final boolean handleBottomClicks;
 	
-	public AbstractInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening, @Nonnull Consumer<InventoryData> closing) {
+	public AbstractInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening, @Nonnull Consumer<InventoryData> closing, boolean handleBottomClicks) {
 		this.plugin = plugin;
 		this.rows = rows;
 		this.opening = opening;
 		this.closing = closing;
+		this.handleBottomClicks = handleBottomClicks;
 	}
 	
 	@Nonnull
@@ -51,6 +53,11 @@ public abstract class AbstractInventory implements InventoryBase {
 		return closing;
 	}
 	
+	@Override
+	public boolean handleBottomClicks() {
+		return handleBottomClicks;
+	}
+	
 	protected void listenView(@Nonnull Player player) {
 		Events.subscribe(InventoryOpenEvent.class)
 			.filter(event -> event.getInventory().getHolder() instanceof InventoryView)
@@ -74,9 +81,12 @@ public abstract class AbstractInventory implements InventoryBase {
 			
 			.handle(event -> {
 				boolean isBottomClick = event.getClickedInventory().equals(event.getView().getBottomInventory());
-				if (isBottomClick)
+				if (isBottomClick) {
 					if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR)
 						event.setCancelled(true);
+					if (!handleBottomClicks())
+						return;
+				}
 				
 				InventoryView view = (InventoryView) event.getView().getTopInventory().getHolder();
 				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), isBottomClick ? event.getSlot() : event.getRawSlot(), event.getAction(), event.getView().getBottomInventory(), isBottomClick);

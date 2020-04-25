@@ -18,6 +18,7 @@ public class InventoryBaseBuilder implements InventoryBuilder<InventoryBaseBuild
 	private final Plugin plugin;
 	private int rows = 1;
 	private Consumer<InventoryData> opening = data -> {}, closing = data -> {};
+	private boolean handleBottomClicks;
 	
 	public InventoryBaseBuilder(@Nonnull Plugin plugin) {
 		this.plugin = plugin;
@@ -46,8 +47,15 @@ public class InventoryBaseBuilder implements InventoryBuilder<InventoryBaseBuild
 	
 	@Nonnull
 	@Override
+	public InventoryBaseBuilder handleBottomClicks(boolean handleBottomClicks) {
+		this.handleBottomClicks = handleBottomClicks;
+		return this;
+	}
+	
+	@Nonnull
+	@Override
 	public InventoryBase build() {
-		return new AbstractInventory(plugin, rows, opening, closing) {
+		return new AbstractInventory(plugin, rows, opening, closing, handleBottomClicks) {
 			
 			@Override
 			public void refresh(Player player) {}

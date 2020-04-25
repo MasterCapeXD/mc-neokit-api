@@ -26,8 +26,8 @@ public class SimpleGlobalViewInventory extends AbstractInventory implements Glob
 	private final InventoryView view;
 	
 	public SimpleGlobalViewInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening,
-			@Nonnull Consumer<InventoryData> closing, @Nonnull String title, @Nonnull Map<Integer, Icon> icons) {
-		super(plugin, rows, opening, closing);
+			@Nonnull Consumer<InventoryData> closing, boolean handleBottomClicks, @Nonnull String title, @Nonnull Map<Integer, Icon> icons) {
+		super(plugin, rows, opening, closing, handleBottomClicks);
 		this.title = title;
 		this.icons = Maps.newHashMap(icons);
 		this.view = new InventoryView(this, title, rows);

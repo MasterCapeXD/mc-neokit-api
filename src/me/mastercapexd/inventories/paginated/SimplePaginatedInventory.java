@@ -32,9 +32,9 @@ public class SimplePaginatedInventory extends SimplePersonalViewInventory implem
 	private final Map<Player, Integer> playerPageMap = Maps.newHashMap();
 	
 	public SimplePaginatedInventory(@Nonnull Plugin plugin, int rows, @Nonnull Consumer<InventoryData> opening,
-			@Nonnull Consumer<InventoryData> closing, @Nonnull BiFunction<Player, PersonalViewInventory, String> titleApplier,
+			@Nonnull Consumer<InventoryData> closing, boolean handleBottomClicks, @Nonnull BiFunction<Player, PersonalViewInventory, String> titleApplier,
 			@Nonnull List<Pair<Function<Player, Integer>, Function<Player, Icon>>> defaultIcons, @Nonnull Integer[] contentSlots) {
-		super(plugin, rows, opening, closing, titleApplier, defaultIcons);
+		super(plugin, rows, opening, closing, handleBottomClicks, titleApplier, defaultIcons);
 		this.contentSlots = ImmutableSet.copyOf(contentSlots);
 	}
 	
