@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -63,17 +64,22 @@ public abstract class AbstractInventory implements InventoryBase {
 	
 		Events.subscribe(InventoryClickEvent.class)
 			.filter(event -> event.getClickedInventory() != null)
-			.filter(event -> event.getClickedInventory().getHolder() instanceof InventoryView)
+			.filter(event -> event.getView().getTopInventory().getHolder() instanceof InventoryView)
 			.filter(event -> event.getWhoClicked() == player)
 			
 			.expiresIf((subscription, event) -> {
-				InventoryView view = (InventoryView) event.getClickedInventory().getHolder();
+				InventoryView view = (InventoryView) event.getView().getTopInventory().getHolder();
 				return !view.getOwner().isViewing(player);
 			}, ExpiryTestStage.POST_FILTER)
 			
 			.handle(event -> {
-				InventoryView view = (InventoryView) event.getClickedInventory().getHolder();
-				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), event.getRawSlot(), event.getAction());
+				boolean isBottomClick = event.getClickedInventory().equals(event.getView().getBottomInventory());
+				if (isBottomClick)
+					if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR)
+						event.setCancelled(true);
+				
+				InventoryView view = (InventoryView) event.getView().getTopInventory().getHolder();
+				ClickData data = ClickData.create(player, view.getInventory(), event.getClick(), isBottomClick ? event.getSlot() : event.getRawSlot(), event.getAction(), event.getView().getBottomInventory(), isBottomClick);
 				Icon icon = getIcon(data);
 				event.setCancelled(icon.getClickAction().test(data));
 			})
