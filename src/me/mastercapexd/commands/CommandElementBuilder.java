@@ -1,7 +1,7 @@
-
 package me.mastercapexd.commands;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -11,31 +11,41 @@ import org.bukkit.command.CommandSender;
 
 import me.mastercapexd.commons.util.Builder;
 
-public interface CommandElementBuilder<T extends CommandElementBuilder<T, R>, R extends CommandElement> extends Builder<R> {
+public interface CommandElementBuilder<B extends CommandElementBuilder<B, R, S>, R extends CommandElement<S>, S extends CommandSender> extends Builder<R> {
 
 	@Nonnull
-	T registerAlias(@Nonnull String alias);
+	B registerAlias(@Nonnull String alias);
 	
 	@Nonnull
-	T withDescription(@Nonnull String description);
+	B withDescription(@Nonnull String description);
 	
 	@Nonnull
-	T withPermission(@Nonnull String permission);
+	B withPermission(@Nonnull String permission, @Nonnull Function<CommandSender, String> messageFunction);
 	
 	@Nonnull
-	T withExecutor(@Nonnull BiFunction<CommandSender, String[], CommandResult> biFunction);
+	B setWrongSenderMessage(@Nonnull Function<CommandSender, String> messageFunction);
 	
 	@Nonnull
-	T withTabCompleter(@Nonnull BiFunction<CommandSender, String[], List<String>> biFunction);
+	B withExecutor(@Nonnull BiConsumer<S, String[]> biConsumer);
 	
 	@Nonnull
-	T withMessage(@Nonnull CommandResult result, @Nonnull Function<CommandSender, String> messageFunction);
+	B withTabCompleter(@Nonnull BiFunction<CommandSender, String[], List<String>> biFunction);
 	
 	@Nonnull
-	default T registerAliases(@Nonnull String... aliases) {
-		T builder = null;
+	default B registerAliases(@Nonnull String... aliases) {
+		B builder = null;
 		for (String alias : aliases)
 			builder = registerAlias(alias);
 		return builder;
+	}
+	
+	@Nonnull
+	default B withPermission(@Nonnull String permission, @Nonnull String message) {
+		return withPermission(permission, s -> message);
+	}
+	
+	@Nonnull
+	default B setWrongSenderMessage(@Nonnull String message) {
+		return setWrongSenderMessage(s -> message);
 	}
 }

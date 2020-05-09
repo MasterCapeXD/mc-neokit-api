@@ -2,8 +2,10 @@ package me.mastercapexd.commands;
 
 import javax.annotation.Nullable;
 
-public interface ArgumentInfo extends CommandElement {
+import org.bukkit.command.CommandSender;
+
+public interface ArgumentInfo<S extends CommandSender> extends CommandElement<S> {
 
 	@Nullable
-	CommandElement getParent();
+	CommandElement<S> getParent();
 }

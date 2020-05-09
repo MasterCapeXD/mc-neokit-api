@@ -2,7 +2,7 @@ package me.mastercapexd.commands;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -12,21 +12,22 @@ import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.ImmutableList;
 
-public class SimpleCommandArgument extends SimpleArgumentInfo implements CommandArgument {
+public class SimpleCommandArgument<S extends CommandSender> extends SimpleArgumentInfo<S> implements CommandArgument<S> {
 
-	private final Collection<CommandArgument> childs;
+	private final Collection<CommandArgument<S>> childs;
 	
 	protected SimpleCommandArgument(@Nonnull String name, @Nonnull String description, @Nonnull String permission,
-			@Nonnull BiFunction<CommandSender, String[], CommandResult> executor,
+			@Nonnull Function<CommandSender, String> permissionMessageApplier, @Nonnull Function<CommandSender, String> wrongSenderMessageApplier,
+			@Nonnull BiConsumer<S, String[]> executor,
 			@Nonnull BiFunction<CommandSender, String[], List<String>> tabCompleter,
-			@Nonnull Map<CommandResult, Function<CommandSender, String>> messagesMap, @Nonnull String[] aliases, CommandElement parent, @Nonnull Collection<CommandArgument> childs) {
-		super(name, description, permission, executor, tabCompleter, messagesMap, aliases, parent);
+			@Nonnull String[] aliases, CommandElement<S> parent, @SuppressWarnings("rawtypes") @Nonnull Collection<? extends CommandArgument> childs) {
+		super(name, description, permission, permissionMessageApplier, wrongSenderMessageApplier, executor, tabCompleter, aliases, parent);
 		this.childs = ImmutableList.copyOf(childs);
 	}
 	
 	@Nonnull
 	@Override
-	public Collection<CommandArgument> getChilds() {
+	public Collection<CommandArgument<S>> getChilds() {
 		return childs;
 	}
 }

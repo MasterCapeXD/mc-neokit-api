@@ -1,16 +1,18 @@
 package me.mastercapexd.commands;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.collect.HashMultimap;
@@ -20,32 +22,35 @@ import com.google.common.collect.Multimap;
 import me.mastercapexd.commons.plugin.PluginCommand;
 import me.mastercapexd.commons.util.ArrayUtils;
 
-public class SimpleCommand extends CommandBase implements Command {
+public class SimpleCommand<S extends CommandSender> extends CommandBase<S> implements Command<S> {
 
 	private final PluginCommand command;
 	private final String holder;
-	private final Multimap<Integer, ArgumentInfo> argumentMap = HashMultimap.create();
+	private final Multimap<Integer, ArgumentInfo<CommandSender>> argumentMap = HashMultimap.create();
 	
-	protected SimpleCommand(@Nonnull Plugin plugin, @Nonnull String holder, @Nonnull Collection<CommandArgument> argumentMap, @Nonnull String name, @Nonnull String description, @Nonnull String permission,
-			@Nonnull BiFunction<CommandSender, String[], CommandResult> executor,
+	protected SimpleCommand(@Nonnull Plugin plugin, @Nonnull String holder, @Nonnull Collection<CommandArgument<CommandSender>> argumentMap, @Nonnull String name, @Nonnull String description, @Nonnull String permission,
+			@Nonnull Function<CommandSender, String> permissionMessageFunction,
+			@Nonnull Function<CommandSender, String> wrongSenderInstanceMessage,
+			@Nonnull BiConsumer<S, String[]> executor,
 			@Nonnull BiFunction<CommandSender, String[], List<String>> tabCompleter,
-			@Nonnull Map<CommandResult, Function<CommandSender, String>> messagesMap, @Nonnull String[] aliases) {
-		super(name, description, permission, executor, tabCompleter, messagesMap, aliases);
+			@Nonnull String[] aliases) {
+		super(name, description, permission, permissionMessageFunction, wrongSenderInstanceMessage, executor, tabCompleter, aliases);
 		this.holder = holder;
 		this.load(argumentMap, this, 0);
 		this.command = new PluginCommand(plugin, this, this, holder, name, description, "", Lists.newArrayList(aliases));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] params) {
-		ArgumentInfo argument = null;
+		ArgumentInfo<CommandSender> argument = null;
 		int argIndex = 0;
 		
 		for (int paramIndex = params.length - 1; paramIndex >= 0; paramIndex--) {
 			final int localIndex = paramIndex;
-			Collection<ArgumentInfo> args = argumentMap.get(paramIndex);
+			Collection<ArgumentInfo<CommandSender>> args = argumentMap.get(paramIndex);
 			
-			Optional<ArgumentInfo> argumentOptional = args.stream().filter
+			Optional<ArgumentInfo<CommandSender>> argumentOptional = args.stream().filter
 					(arg -> arg.getName().equalsIgnoreCase(params[localIndex]) || ArrayUtils.contains(arg.aliases(), params[localIndex]))
 					.findFirst();
 			
@@ -59,55 +64,63 @@ public class SimpleCommand extends CommandBase implements Command {
 		}
 		
 		if (argument == null) {
-			if (getPermission() != null && !sender.hasPermission(getPermission()))
-				getMessageOptional(CommandResult.NO_PERMISSION, sender).ifPresent(msg -> sender.sendMessage(msg));
-			else {
-				CommandResult result = getExecutor().apply(sender, params);
-				getMessageOptional(result, sender).ifPresent(msg -> sender.sendMessage(msg));
+			try {
+				S s = (S) sender;
+				
+				if (getPermission() != null && !sender.hasPermission(getPermission())) {
+					sender.sendMessage(getPermissionMessageApplier().apply(s));
+					return true;
+				}
+				
+				getExecutor().accept(s, params);
+			} catch (ClassCastException exception) {
+				sender.sendMessage(getWrongSenderMessageApplier().apply(sender));
+				return true;
+			} catch (NullPointerException ignored) {}
+		}
+		
+		try {
+			S s = (S) sender;
+			
+			if (getPermission() != null && !sender.hasPermission(getPermission())) {
+				sender.sendMessage(argument.getWrongSenderMessageApplier().apply(sender));
+				return true;
 			}
-			return true;
-		}
-		
-		if (argument.getPermission() != null && !sender.hasPermission(argument.getPermission())) {
-			argument.getMessageOptional(CommandResult.NO_PERMISSION, sender).ifPresent(msg -> sender.sendMessage(msg));
-			return true;
-		}
-		
-		CommandResult result = argument.getExecutor().apply(sender, ArrayUtils.subarray(params, argIndex + 1, params.length));
-		argument.getMessageOptional(result, sender).ifPresent(msg -> sender.sendMessage(msg));
+			
+			argument.getExecutor().accept(s, ArrayUtils.subarray(params, argIndex + 1, params.length));
+		} catch (ClassCastException exception) {
+			sender.sendMessage(argument.getWrongSenderMessageApplier().apply(sender));
+		} catch (NullPointerException ignored) {}
 		return true;
 	}
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label, String[] params) {
 		if (!getName().equalsIgnoreCase(command.getName()) && !ArrayUtils.contains(aliases(), command.getName()))
-			return Collections.emptyList();
+			return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 		else {
 			final int paramIndex = params.length - 1;
-			Collection<ArgumentInfo> args = argumentMap.get(paramIndex);
+			Collection<ArgumentInfo<CommandSender>> args = argumentMap.get(paramIndex);
 			
 			if (args.isEmpty())
-				return Collections.emptyList();
+				return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			
-			Optional<ArgumentInfo> argumentOptional = args.stream().filter
-					(arg -> arg.getName().equalsIgnoreCase(params[paramIndex]) || ArrayUtils.contains(arg.aliases(), params[paramIndex]))
+			Optional<ArgumentInfo<CommandSender>> argumentOptional = args.stream().filter
+					(arg -> getName().startsWith(params[paramIndex].toLowerCase()) || arg.getName().equalsIgnoreCase(params[paramIndex]) || ArrayUtils.contains(arg.aliases(), params[paramIndex]))
 					.findFirst();
 			
-			if (!argumentOptional.isPresent()) {
-				List<String> completions = Lists.newArrayList();
-				args.stream().filter(arg -> getName().startsWith(params[paramIndex]) && 
-						(params.length <= 1 || arg.getParent().getName().equalsIgnoreCase(params[paramIndex - 1]) ||
-						ArrayUtils.contains(arg.getParent().aliases(), params[paramIndex - 1])))
-				.forEach(arg -> completions.add(arg.getName()));
-				return completions;
-			}
+			if (!argumentOptional.isPresent())
+				Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			
-			ArgumentInfo argument = argumentOptional.get();
-			if (params.length <= 1
-					|| argument.getParent().getName().equalsIgnoreCase(params[paramIndex - 1])
-					|| ArrayUtils.contains(argument.getParent().aliases(), params[paramIndex - 1]))
-				return argument.getTabCompleter().apply(sender, params);
-			return Collections.emptyList();
+			ArgumentInfo<CommandSender> argument = argumentOptional.get();
+			List<String> result = argument.getTabCompleter().apply(sender, ArrayUtils.subarray(params, paramIndex + 1, params.length));
+			if (params.length <= 1)
+				return result.stream().filter(str -> str.startsWith(params[paramIndex].toLowerCase())).collect(Collectors.toList());
+			else {
+				result.removeIf(str -> !argument.getParent().getName().equalsIgnoreCase(params[paramIndex - 1]) ||
+						!str.startsWith(params[paramIndex].toLowerCase()));
+				return result;
+			}
 		}
 	}
 	
@@ -122,9 +135,10 @@ public class SimpleCommand extends CommandBase implements Command {
 		command.register();
 	}
 	
-	private void load(Collection<CommandArgument> arguments, CommandElement parent, int index) {
-		for (CommandArgument argument : arguments) {
-			SimpleArgumentInfo argumentInfo = new SimpleArgumentInfo(argument, parent);
+	private void load(Collection<CommandArgument<CommandSender>> arguments, CommandElement<? extends CommandSender> parent, int index) {
+		for (CommandArgument<CommandSender> argument : arguments) {
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			SimpleArgumentInfo<CommandSender> argumentInfo = new SimpleArgumentInfo(argument, parent);
 			argumentMap.put(index, argumentInfo);
 			
 			if (argument.getChilds().isEmpty())

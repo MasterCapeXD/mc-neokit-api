@@ -1,7 +1,7 @@
 package me.mastercapexd.commands;
 
 import java.util.List;
-import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -10,24 +10,24 @@ import javax.annotation.Nullable;
 
 import org.bukkit.command.CommandSender;
 
-import com.google.common.collect.ImmutableMap;
-
-public class CommandBase implements CommandElement {
+public class CommandBase<S extends CommandSender> implements CommandElement<S> {
 
 	private final String name, description, permission;
 	private final String[] aliases;
-	private final BiFunction<CommandSender, String[], CommandResult> executor;
+	private final BiConsumer<S, String[]> executor;
 	private final BiFunction<CommandSender, String[], List<String>> tabCompleter;
-	private final Map<CommandResult, Function<CommandSender, String>> resultMessages;
+	private final Function<CommandSender, String> permissionMessageApplier, wrongSenderMessageApplier;
 	
 	protected CommandBase(@Nonnull String name, @Nonnull String description, @Nonnull String permission,
-			@Nonnull BiFunction<CommandSender, String[], CommandResult> executor, @Nonnull BiFunction<CommandSender, String[], List<String>> tabCompleter, @Nonnull Map<CommandResult, Function<CommandSender, String>> messagesMap, @Nonnull String... aliases) {
+			@Nonnull Function<CommandSender, String> permissionMessageApplier, @Nonnull Function<CommandSender, String> wrongSenderMessageApplier,
+			@Nonnull BiConsumer<S, String[]> executor, @Nonnull BiFunction<CommandSender, String[], List<String>> tabCompleter, @Nonnull String... aliases) {
 		this.name = name;
 		this.description = description;
 		this.permission = permission;
+		this.permissionMessageApplier = permissionMessageApplier;
+		this.wrongSenderMessageApplier = wrongSenderMessageApplier;
 		this.executor = executor;
 		this.tabCompleter = tabCompleter;
-		this.resultMessages = ImmutableMap.copyOf(messagesMap);
 		this.aliases = aliases;
 	}
 	
@@ -51,19 +51,23 @@ public class CommandBase implements CommandElement {
 		return permission;
 	}
 	
+	@Override
+	public Function<CommandSender, String> getPermissionMessageApplier() {
+		return permissionMessageApplier;
+	}
+	
+	@Override
+	public Function<CommandSender, String> getWrongSenderMessageApplier() {
+		return wrongSenderMessageApplier;
+	}
+	
 	@Nonnull
-	public BiFunction<CommandSender, String[], CommandResult> getExecutor() {
+	public BiConsumer<S, String[]> getExecutor() {
 		return executor;
 	}
 	
 	@Nonnull
 	public BiFunction<CommandSender, String[], List<String>> getTabCompleter() {
 		return tabCompleter;
-	}
-	
-	@Nonnull
-	@Override
-	public Map<CommandResult, Function<CommandSender, String>> getMessageMap() {
-		return ImmutableMap.copyOf(resultMessages);
 	}
 }

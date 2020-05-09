@@ -4,8 +4,10 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-public interface CommandArgument extends ArgumentInfo {
+import org.bukkit.command.CommandSender;
+
+public interface CommandArgument<S extends CommandSender> extends ArgumentInfo<S> {
 
 	@Nonnull
-	Collection<CommandArgument> getChilds();
+	Collection<CommandArgument<S>> getChilds();
 }
