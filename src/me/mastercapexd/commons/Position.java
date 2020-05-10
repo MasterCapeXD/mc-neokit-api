@@ -7,6 +7,19 @@ import org.bukkit.Location;
 
 public final class Position {
 
+	public static Position fromString(@Nonnull String string) {
+		String[] data = string.split(":");
+		String[] coords = data[1].split(";");
+		String[] direction = data[2].split(";");
+		return new Position(
+				data[0],
+				Double.parseDouble(coords[0]),
+				Double.parseDouble(coords[1]),
+				Double.parseDouble(coords[2]),
+				Float.parseFloat(direction[0]),
+				Float.parseFloat(direction[1]));
+	}
+	
 	private final Point point;
 	private final Direction direction;
 	

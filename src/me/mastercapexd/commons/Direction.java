@@ -6,6 +6,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public final class Direction {
 
+	public static Direction fromString(@Nonnull String string) {
+		String[] direction = string.split(";");
+		return new Direction(Float.parseFloat(direction[0]), Float.parseFloat(direction[1]));
+	}
+	
 	public static final Direction DOWN = new Direction(90, 0);
 	public static final Direction UP = new Direction(-90, 0);
 	
