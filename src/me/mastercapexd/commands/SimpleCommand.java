@@ -28,7 +28,7 @@ public class SimpleCommand<S extends CommandSender> extends CommandBase<S> imple
 	private final String holder;
 	private final Multimap<Integer, ArgumentInfo<CommandSender>> argumentMap = HashMultimap.create();
 	
-	protected SimpleCommand(@Nonnull Plugin plugin, @Nonnull String holder, @Nonnull Collection<CommandArgument<CommandSender>> argumentMap, @Nonnull String name, @Nonnull String description, @Nonnull String permission,
+	protected SimpleCommand(@Nonnull Plugin plugin, @Nonnull String holder, @Nonnull Collection<CommandArgument<? extends CommandSender>> argumentMap, @Nonnull String name, @Nonnull String description, @Nonnull String permission,
 			@Nonnull Function<CommandSender, String> permissionMessageFunction,
 			@Nonnull Function<CommandSender, String> wrongSenderInstanceMessage,
 			@Nonnull BiConsumer<S, String[]> executor,
@@ -135,8 +135,8 @@ public class SimpleCommand<S extends CommandSender> extends CommandBase<S> imple
 		command.register();
 	}
 	
-	private void load(Collection<CommandArgument<CommandSender>> arguments, CommandElement<? extends CommandSender> parent, int index) {
-		for (CommandArgument<CommandSender> argument : arguments) {
+	private void load(Collection<CommandArgument<? extends CommandSender>> arguments, CommandElement<? extends CommandSender> parent, int index) {
+		for (CommandArgument<? extends CommandSender> argument : arguments) {
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			SimpleArgumentInfo<CommandSender> argumentInfo = new SimpleArgumentInfo(argument, parent);
 			argumentMap.put(index, argumentInfo);

@@ -18,9 +18,9 @@ public class SimpleCommandBuilder<S extends CommandSender> implements CommandBui
 	private final Plugin plugin;
 	private final CommandBaseBuilder<S> baseBuilder;
 	private final String holder;
-	private final Collection<CommandArgument<CommandSender>> arguments = Lists.newArrayList();
+	private final Collection<CommandArgument<? extends CommandSender>> arguments = Lists.newArrayList();
 	
-	public SimpleCommandBuilder(@Nonnull Plugin plugin, @Nonnull String name, Class<S> senderInstance) {
+	public SimpleCommandBuilder(@Nonnull Plugin plugin, @Nonnull String name) {
 		this(plugin, plugin.getName().toLowerCase(), name);
 	}
 	
@@ -78,8 +78,8 @@ public class SimpleCommandBuilder<S extends CommandSender> implements CommandBui
 	}
 	
 	@Override
-	public CommandBuilder<S> addArgument(CommandArgument<CommandSender> argument) {
-		arguments.add(argument);
+	public CommandBuilder<S> addArgument(CommandArgumentBuilder<? extends CommandSender> argumentBuilder) {
+		arguments.add(argumentBuilder.build());
 		return this;
 	}
 }

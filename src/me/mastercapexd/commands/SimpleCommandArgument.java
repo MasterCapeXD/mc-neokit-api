@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public class SimpleCommandArgument<S extends CommandSender> extends SimpleArgumentInfo<S> implements CommandArgument<S> {
 
-	private final Collection<CommandArgument<S>> childs;
+	private final Collection<CommandArgument<? extends CommandSender>> childs;
 	
 	protected SimpleCommandArgument(@Nonnull String name, @Nonnull String description, @Nonnull String permission,
 			@Nonnull Function<CommandSender, String> permissionMessageApplier, @Nonnull Function<CommandSender, String> wrongSenderMessageApplier,
@@ -27,7 +27,7 @@ public class SimpleCommandArgument<S extends CommandSender> extends SimpleArgume
 	
 	@Nonnull
 	@Override
-	public Collection<CommandArgument<S>> getChilds() {
+	public Collection<CommandArgument<? extends CommandSender>> getChilds() {
 		return childs;
 	}
 }

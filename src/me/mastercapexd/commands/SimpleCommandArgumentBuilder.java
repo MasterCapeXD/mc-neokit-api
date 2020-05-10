@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.Lists;
 
-//@SuppressWarnings("rawtypes")
 public class SimpleCommandArgumentBuilder<S extends CommandSender> implements CommandArgumentBuilder<S> {
 
 	private final CommandBaseBuilder<S> baseBuilder;

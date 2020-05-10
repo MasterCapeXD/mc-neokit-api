@@ -9,5 +9,5 @@ import org.bukkit.command.CommandSender;
 public interface CommandArgument<S extends CommandSender> extends ArgumentInfo<S> {
 
 	@Nonnull
-	Collection<CommandArgument<S>> getChilds();
+	Collection<CommandArgument<? extends CommandSender>> getChilds();
 }
