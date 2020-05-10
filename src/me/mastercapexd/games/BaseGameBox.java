@@ -6,10 +6,14 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+
+import me.mastercapexd.games.event.internal.GameBoxDisableEvent;
+import me.mastercapexd.games.event.internal.GameBoxEnableEvent;
 
 public class BaseGameBox<T extends Team> implements GameBox<T> {
 
@@ -72,11 +76,15 @@ public class BaseGameBox<T extends Team> implements GameBox<T> {
 	@Override
 	public void enable() {
 		this.enabled = true;
+		GameBoxEnableEvent event = new GameBoxEnableEvent(this);
+		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
 	
 	@Override
 	public void disable() {
 		this.enabled = false;
+		GameBoxDisableEvent event = new GameBoxDisableEvent(this);
+		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
 	
 	@Override
